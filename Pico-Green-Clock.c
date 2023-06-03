@@ -5173,82 +5173,82 @@ void evaluate_blinking_time(void)
   
   /* While the clock is displayed, blink the top "middle dot" during the first 20 seconds, then the bottom
      "middle dot" during 20 to 40 seconds, and finally both "middle dots" between 40 and 59 seconds. */
-  if (CurrentClockMode == MODE_SHOW_TIME)
-  {
-    ++DotBlinkCount;
+  // if (CurrentClockMode == MODE_SHOW_TIME)
+  // {
+  //   ++DotBlinkCount;
 
-    /* 500 means "erase the target dot(s)". */
-    if (DotBlinkCount == 500)
-    {
-      /* We change the status of blinking double-dots, allow "display seconds" to be updated
-         on display at the same time if it is active (to prevent a glitch in display update). */
-      sem_release(&SemSync);
+  //   /* 500 means "erase the target dot(s)". */
+  //   if (DotBlinkCount == 500)
+  //   {
+  //     /* We change the status of blinking double-dots, allow "display seconds" to be updated
+  //        on display at the same time if it is active (to prevent a glitch in display update). */
+  //     sem_release(&SemSync);
 
-      if (CurrentSecond < 15)
-      {
-        /* From 0 to 14 seconds, blink the top "middle dot". */
-        DisplayBuffer[11] &= 0xEF; // slim ":" - turn Off top dot.
+  //     if (CurrentSecond < 15)
+  //     {
+  //       /* From 0 to 14 seconds, blink the top "middle dot". */
+  //       DisplayBuffer[11] &= 0xEF; // slim ":" - turn Off top dot.
 
-        /* Make sure the other dot (bottom dot) is on. */
-        DisplayBuffer[13] |= 0x10; // slim ":" - make sure bottom dot is turned On.
-      }
-      else if (CurrentSecond < 30)
-      {
-        /* From 15 to 29 seconds, blink the bottom "middle dot". */
-        DisplayBuffer[11] |= 0x10; // slim ":" - make sure top dot is turned On.
+  //       /* Make sure the other dot (bottom dot) is on. */
+  //       DisplayBuffer[13] |= 0x10; // slim ":" - make sure bottom dot is turned On.
+  //     }
+  //     else if (CurrentSecond < 30)
+  //     {
+  //       /* From 15 to 29 seconds, blink the bottom "middle dot". */
+  //       DisplayBuffer[11] |= 0x10; // slim ":" - make sure top dot is turned On.
 
-        /* Erase bottom dot. */
-        DisplayBuffer[13] &= 0xEF; // slim ":" - erase bottom dot.
-      }
-      else if (CurrentSecond < 45)
-      {
-        /* From 30 to 44 seconds, alternate between both "middle dots". */
-        DisplayBuffer[11] |= 0x10; // slim ":" - turn On top dot.
+  //       /* Erase bottom dot. */
+  //       DisplayBuffer[13] &= 0xEF; // slim ":" - erase bottom dot.
+  //     }
+  //     else if (CurrentSecond < 45)
+  //     {
+  //       /* From 30 to 44 seconds, alternate between both "middle dots". */
+  //       DisplayBuffer[11] |= 0x10; // slim ":" - turn On top dot.
 
-        /* Turn Off bottom dot. */
-        DisplayBuffer[13] &= 0xEF; // slim ":" - turn Off bottom dot.
-      }
-      else
-      {
-        /* From 45 to 59 seconds, blink both "middle dots". */
-        DisplayBuffer[11] &= 0xEF; // slim ":" - turn Off top dot.
-        DisplayBuffer[13] &= 0xEF; // slim ":" - turn Off bottom dot.
-      }
-    }
+  //       /* Turn Off bottom dot. */
+  //       DisplayBuffer[13] &= 0xEF; // slim ":" - turn Off bottom dot.
+  //     }
+  //     else
+  //     {
+  //       /* From 45 to 59 seconds, blink both "middle dots". */
+  //       DisplayBuffer[11] &= 0xEF; // slim ":" - turn Off top dot.
+  //       DisplayBuffer[13] &= 0xEF; // slim ":" - turn Off bottom dot.
+  //     }
+  //   }
 
-    /* 1000 means "redraw the target dot(s)". */
-    if (DotBlinkCount == 1000)
-    {
-      /* We change the status of blinking double-dots, allow "display seconds" to be updated
-         on display at the same time if it is active (to prevent a glitch in display update). */
-      sem_release(&SemSync);
+  //   /* 1000 means "redraw the target dot(s)". */
+  //   if (DotBlinkCount == 1000)
+  //   {
+  //     /* We change the status of blinking double-dots, allow "display seconds" to be updated
+  //        on display at the same time if it is active (to prevent a glitch in display update). */
+  //     sem_release(&SemSync);
 
-      if (CurrentSecond < 15)
-      {
-        /* From 0 to 14 seconds, blink the top "middle dot". */
-        DisplayBuffer[11] |= 0x10; // slim ":" - turn On top dot.
-      }
-      else if (CurrentSecond < 30)
-      {
-        /* From 15 to 29 seconds, blink the bottom "middle dot". */
-        DisplayBuffer[13] |= 0x10; // slim ":" - turn On bottom dot.
-      }
-      else if (CurrentSecond < 45)
-      {
-        /* From 30 to 44 seconds, alternate between both "middle dots". */
-        DisplayBuffer[11] &= 0xEF; // slim ":" - turn Off top dot.
-        DisplayBuffer[13] |= 0x10; // slim ":" - turn On bottom dot.
-      }
-      else
-      {
-        /* From 45 to 59 seconds, blink both "middle dot". */
-        DisplayBuffer[11] |= 0x10; // slim ":" - turn On top dot.
-        DisplayBuffer[13] |= 0x10; // slim ":" - turn On bottom dot.
-      }
+  //     if (CurrentSecond < 15)
+  //     {
+  //       /* From 0 to 14 seconds, blink the top "middle dot". */
+  //       DisplayBuffer[11] |= 0x10; // slim ":" - turn On top dot.
+  //     }
+  //     else if (CurrentSecond < 30)
+  //     {
+  //       /* From 15 to 29 seconds, blink the bottom "middle dot". */
+  //       DisplayBuffer[13] |= 0x10; // slim ":" - turn On bottom dot.
+  //     }
+  //     else if (CurrentSecond < 45)
+  //     {
+  //       /* From 30 to 44 seconds, alternate between both "middle dots". */
+  //       DisplayBuffer[11] &= 0xEF; // slim ":" - turn Off top dot.
+  //       DisplayBuffer[13] |= 0x10; // slim ":" - turn On bottom dot.
+  //     }
+  //     else
+  //     {
+  //       /* From 45 to 59 seconds, blink both "middle dot". */
+  //       DisplayBuffer[11] |= 0x10; // slim ":" - turn On top dot.
+  //       DisplayBuffer[13] |= 0x10; // slim ":" - turn On bottom dot.
+  //     }
 
-      DotBlinkCount = 0; // reset DotBlinkCount
-    }
-  }
+  //     DotBlinkCount = 0; // reset DotBlinkCount
+  //   }
+  // }
 
   return;
 }
