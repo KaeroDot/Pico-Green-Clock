@@ -9480,7 +9480,7 @@ void process_scroll_queue(void)
           if (FlashConfig.TemperatureUnit == CELSIUS)
           {
             /* ...in Celsius. */
-            sprintf(String, "RTC IC: %2.2f%cC    ", Temperature, 0x80);
+            sprintf(String, "T=%2.2f %cC    ", Temperature, 0x80);
           }
           else
           {
