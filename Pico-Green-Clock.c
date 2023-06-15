@@ -9480,7 +9480,7 @@ void process_scroll_queue(void)
           if (FlashConfig.TemperatureUnit == CELSIUS)
           {
             /* ...in Celsius. */
-            sprintf(String, "T=%2.2f %cC    ", Temperature, 0x80);
+            sprintf(String, "tep: %2.2f %cC    ", Temperature, 0x80);
           }
           else
           {
