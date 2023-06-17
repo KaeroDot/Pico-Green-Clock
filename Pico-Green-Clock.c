@@ -9590,15 +9590,15 @@ void process_scroll_queue(void)
                 if (FlashConfig.FlagSummerTime == FLAG_ON)
                 {
                   strcat(String, " - je letni cas    ");
-                  String[10] = (UINT8)131; // i-acute
-                  String[12] = (UINT8)136; // c-caron
+                  String[strlen(String) - 9] = (UINT8)131; // i-acute
+                  String[strlen(String) - 7] = (UINT8)136; // c-caron
                 }
                 else
                 {
                   strcat(String, " - neni letni cas    ");
-                  String[6] = (UINT8)131; // i-acute
-                  String[12] = (UINT8)131; // i-acute
-                  String[14] = (UINT8)136; // c-caron
+                  String[strlen(String) - 15] = (UINT8)131; // i-acute
+                  String[strlen(String) - 9] = (UINT8)131; // i-acute
+                  String[strlen(String) - 7] = (UINT8)136; // c-caron
                 }
               }
             break;
