@@ -1122,6 +1122,7 @@ struct dht_data
          the code in future releases...
 \* ------------------------------------------------------------------ */
 UINT16 AlarmReachedBitMask        = 0;         // assume no alarms are ringing on entry.
+UINT8  DisableIncomingAlarm       = 0;         // no incoming alarm is disabled.
 UINT8  AlarmNumber                = 0;         // since Version 6.00, there are now 9 alarms.
 UINT8  AlarmTargetDay             = MON;       // blinking day-of-week to be selected or unselected for current alarm setting.
 volatile UINT16 AverageLightLevel = 550;       // relative ambient light value (for clock display auto-brightness feature). Assume average light level on entry.
@@ -16854,36 +16855,64 @@ bool timer_callback_ms(struct repeating_timer *TimerMSec)
         break;
       }
     }
-    else if ((BottomKeyPressTime > 300) && (SetupStep != SETUP_NONE))
+    else
     {
-      /* Special case if we are in alarm setup mode, selecting target day-of-week for alarm. */
-      if ((SetupSource == SETUP_SOURCE_ALARM) && (SetupStep == SETUP_ALARM_DAY))
-      {
-        setup_alarm_variables(FLAG_LONG_DOWN); // perform alarm settings.
-        set_mode_out();
-        FlagSetAlarm = FLAG_ON;
-      }
-      else
-      {
-        /* If the "Down" (bottom) button is not pressed, but cumulative time is not zero, it means that the
-           "Down" button has just been released and it is a "long press" (longer than 300 milliseconds). */
-        IdleNumberOfSeconds = 0; // reset the number of seconds the system has been idle.
-        if (FlashConfig.FlagKeyclick == FLAG_ON)
+        if (BottomKeyPressTime > 300)
         {
-          for (Loop1UInt8 = 0; Loop1UInt8 < TONE_KEYCLICK_REPEAT2; ++Loop1UInt8)
-          {
-            sound_queue_active(TONE_KEYCLICK_DURATION, TONE_KEYCLICK_REPEAT1);
-          }
-          sound_queue_active(50, SILENT);
+            if (SetupStep != SETUP_NONE)
+            {
+              /* Special case if we are in alarm setup mode, selecting target day-of-week for alarm. */
+              if ((SetupSource == SETUP_SOURCE_ALARM) && (SetupStep == SETUP_ALARM_DAY))
+              {
+                setup_alarm_variables(FLAG_LONG_DOWN); // perform alarm settings.
+                set_mode_out();
+                FlagSetAlarm = FLAG_ON;
+              }
+              else
+              {
+                /* If the "Down" (bottom) button is not pressed, but cumulative time is not zero, it means that the
+                   "Down" button has just been released and it is a "long press" (longer than 300 milliseconds). */
+                IdleNumberOfSeconds = 0; // reset the number of seconds the system has been idle.
+                if (FlashConfig.FlagKeyclick == FLAG_ON)
+                {
+                  for (Loop1UInt8 = 0; Loop1UInt8 < TONE_KEYCLICK_REPEAT2; ++Loop1UInt8)
+                  {
+                    sound_queue_active(TONE_KEYCLICK_DURATION, TONE_KEYCLICK_REPEAT1);
+                  }
+                  sound_queue_active(50, SILENT);
+                }
+
+                set_mode_timeout();              // exit setup mode.
+                set_mode_out();                  // make required housekeeping.
+                SetupSource = SETUP_SOURCE_NONE; // no more in setup mode.
+                SetupStep = SETUP_NONE;          // reset SetupStep.
+              }
+            }
+            else
+            {
+              /* If we're not in a setup mode, long press on the "Bottom" button disable next incoming alarm. */
+              DisableIncomingAlarm       = 1;  // one next incoming alarm will be disabled.
+              switch (FlashConfig.Language)
+              {
+                case (CZECH):
+                  sprintf(String, "Nadchazejici budik je docasne vypnut.");
+                  String[5] = (UINT8)129; // a-acute
+                  String[9] = (UINT8)131; // i-acute
+                  String[11] = (UINT8)131; // i-acute
+                  String[16] = (UINT8)131; // i-acute
+                  String[24] = (UINT8)136; // c-caron
+                  String[28] = (UINT8)130; // e-caron
+                break;
+
+                case (ENGLISH):
+                default:
+                  sprintf(String, "Incoming alarm is temporarily disabled.");
+                break;
+              }
+              scroll_string(24, String);
+            }
         }
-
-        set_mode_timeout();              // exit setup mode.
-        set_mode_out();                  // make required housekeeping.
-        SetupSource = SETUP_SOURCE_NONE; // no more in setup mode.
-        SetupStep = SETUP_NONE;          // reset SetupStep.
-      }
     }
-
     /* Reset bottom button cumulative press time. */
     BottomKeyPressTime = 0;
   }
@@ -17238,15 +17267,24 @@ bool timer_callback_s(struct repeating_timer *TimerSec)
       if (DebugBitMask & DEBUG_ALARMS)
         uart_send(__LINE__, "-[%2.2u]: **Reached**\r", Loop1UInt8);
 
-      /* Set the bit corresponding to this alarm in the alarm bit mask. */
-      AlarmReachedBitMask |= (1 << Loop1UInt8);
+      /* Check if alarm should be disabled */
+      if (DisableIncomingAlarm)
+      {
+        /* Alarm has to be disabled, so do nothing, only reset the flag so other alarms will work */
+        DisableIncomingAlarm = 0;
+      }
+      else
+      {
+        /* Set the bit corresponding to this alarm in the alarm bit mask. */
+        AlarmReachedBitMask |= (1 << Loop1UInt8);
 
-      if (DebugBitMask & DEBUG_ALARMS)
-        uart_send(__LINE__, "-BitMask: 0x%4.4X\r\r", AlarmReachedBitMask);
+        if (DebugBitMask & DEBUG_ALARMS)
+          uart_send(__LINE__, "-BitMask: 0x%4.4X\r\r", AlarmReachedBitMask);
 
-      /* If there is a string associated with this alarm, scroll it on clock display. */
-      if (FlashConfig.Alarm[Loop1UInt8].Text[0] != 0x00)
-        scroll_string(24, FlashConfig.Alarm[Loop1UInt8].Text);
+        /* If there is a string associated with this alarm, scroll it on clock display. */
+        if (FlashConfig.Alarm[Loop1UInt8].Text[0] != 0x00)
+          scroll_string(24, FlashConfig.Alarm[Loop1UInt8].Text);
+      }
     }
   }
 
