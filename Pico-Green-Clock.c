@@ -335,13 +335,13 @@
 #warning Built as DEVELOPER_VERSION
 
 /* Specify the filename of calendar events to merge with this version of firmware. */
-#define CALENDAR_FILENAME "CalendarEventsAndre.cpp"
+#define CALENDAR_FILENAME "CalendarEventsGeneric.cpp"
 
 /* Specify the filename of calendar events to merge with this version of firmware. */
-#define REMINDER_FILENAME "RemindersAndre.cpp"
+#define REMINDER_FILENAME "RemindersGeneric.cpp"
 
 /* Conditional compile to allow a quicker power-up sequence by-passing some device tests. */
-#define QUICK_START  ///
+// #define QUICK_START  ///
 #ifdef QUICK_START
 #warning Built with QUICK_START
 #endif  // QUICK_START
@@ -359,7 +359,7 @@
 
 /* Loop at the beginning of the code until a USB CDC connection has been established. Quick beeps will be heard during waiting so that user
    is aware of what's going on. */
-#define USB_CONNECTION  ///
+// #define USB_CONNECTION  ///
 #ifdef USB_CONNECTION
 #warning Built with USB_CONNECTION
 #endif  // USB_CONNECTION
@@ -380,12 +380,12 @@
    to read and display those parameters. The sensors must be bought and installed by user. They are not included with the Pico Green Clock.
    If you did install one, cut this block and paste it outside of the "#ifdef DEVELOPER_VERSION" and "#endif" to enable the "#define DHT_SUPPORT and / or 
    "#define BME280_SUPPORT". */
-#define DHT_SUPPORT  /// if a DHT22 temperature and humidity sensor has been installed by user.
+// #define DHT_SUPPORT  /// if a DHT22 temperature and humidity sensor has been installed by user.
 #ifdef DHT_SUPPORT
 #warning Built with DHT22 support
 #endif  // DHT_SUPPORT
 
-#define BME280_SUPPORT  /// if a BME280 temperature, humidity and barometric pressure sensor has been installed by user.
+// #define BME280_SUPPORT  /// if a BME280 temperature, humidity and barometric pressure sensor has been installed by user.
 #ifdef BME280_SUPPORT
 #warning Built with BME280 support
 #endif  // BME280_SUPPORT
@@ -399,7 +399,7 @@
    If you did install an infrared sensor, cut this block and paste it outside of the "#ifdef DEVELOPER_VERSION" and "#endif" to enable the "#define IR_SUPPORT".
    You also need to replace the default "REMOTE_FILENAME" by the filename you created containing the infrared timing / codes corresponding to your remote control.
    You may want to check the Pico-Remote-Analyzer utility in one of my repositories. */
-#define IR_SUPPORT // if an infrared sensor (VS1838B-type) has been installed by the user and IR protocol of the remote control has been analyzed and implemented.
+// #define IR_SUPPORT // if an infrared sensor (VS1838B-type) has been installed by the user and IR protocol of the remote control has been analyzed and implemented.
 
 /* Specify the file containing the remote control protocol to be used. */
 #define REMOTE_FILENAME "memorex.cpp"
