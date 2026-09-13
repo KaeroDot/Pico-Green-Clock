@@ -79,17 +79,13 @@ $ ls
 Pico-Green-Clock        pico-examples           pico-sdk
 ```
 4. Now lets build
+
 ```
-$ cd Pico-Green-Clock/
-$ mkdir build
-$ cd build/
-$ export PICO_SDK_PATH=../../pico-sdk
-$ cmake ..
-$ make -j4
-$ ls
-CMakeCache.txt                  Pico-Clock-Green.dis            Pico-Clock-Green.uf2            pico-sdk
-CMakeFiles                      Pico-Clock-Green.elf            cmake_install.cmake             pioasm
-Makefile                        Pico-Clock-Green.elf.map        elf2uf2
-Pico-Clock-Green.bin            Pico-Clock-Green.hex            generated
+cd Pico-Green-Clock
+rm -rf build
+mkdir build
+cmake -S . -B build -DPICO_BOARD=pico_w -DCMAKE_BUILD_TYPE=Release
+cmake --build build -j$(nproc)
 ```
-You now have an executable "uf2" that you can transfer to the Pico`s flash memory to run the Pico-Green-Clock.
+
+You now have an executable "build/Pico-Clock-Green.uf2" that you can transfer to the Pico`s flash memory to run the Pico-Green-Clock.
