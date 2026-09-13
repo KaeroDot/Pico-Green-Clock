@@ -17158,19 +17158,8 @@ bool timer_callback_ms(struct repeating_timer *TimerMSec)
         break;
 
         default:
-          /* NOTE: Clock display auto-brightness toggling has been Added to the list of clock setup parameters.
-                   Leave a copy of this function here for convenience and quicker access. */
-          /* If we are not in setup mode, toggle the "auto-brightness" On / Off. */
-          if (FlashConfig.FlagAutoBrightness == FLAG_ON)
-          {
-            FlashConfig.FlagAutoBrightness = FLAG_OFF;
-            IndicatorAutoLightOff;
-          }
-          else
-          {
-            FlashConfig.FlagAutoBrightness = FLAG_ON;
-            IndicatorAutoLightOn;
-          }
+          /* Short press on the Down button is intentionally ignored when not in setup mode.
+             Auto-brightness is no longer switched here. */
         break;
       }
     }
@@ -17209,24 +17198,50 @@ bool timer_callback_ms(struct repeating_timer *TimerMSec)
             }
             else
             {
-              /* If we're not in a setup mode, long press on the "Bottom" button disable next incoming alarm. */
-              DisableIncomingAlarm       = 1;  // one next incoming alarm will be disabled.
-              switch (FlashConfig.Language)
+              /* If we're not in a setup mode, a long press toggles temporary suppression of the next incoming alarm. */
+              if (DisableIncomingAlarm)
               {
-                case (CZECH):
-                  sprintf(String, "Nadchazejici budik je docasne vypnut.");
-                  String[5] = (UINT8)129; // a-acute
-                  String[9] = (UINT8)131; // i-acute
-                  String[11] = (UINT8)131; // i-acute
-                  String[16] = (UINT8)131; // i-acute
-                  String[24] = (UINT8)136; // c-caron
-                  String[28] = (UINT8)130; // e-caron
-                break;
+                DisableIncomingAlarm = 0;
+                IndicatorScrollOff;
+                switch (FlashConfig.Language)
+                {
+                  case (CZECH):
+                    sprintf(String, "Nadchazejici budik je opet aktivni.");
+                    String[5] = (UINT8)129; // a-acute
+                    String[9] = (UINT8)131; // i-acute
+                    String[11] = (UINT8)131; // i-acute
+                    String[16] = (UINT8)131; // i-acute
+                    String[24] = (UINT8)130; // e-caron
+                    String[33] = (UINT8)131; // i-caron
+                  break;
 
-                case (ENGLISH):
-                default:
-                  sprintf(String, "Incoming alarm is temporarily disabled.");
-                break;
+                  case (ENGLISH):
+                  default:
+                    sprintf(String, "Incoming alarm is enabled again.");
+                  break;
+                }
+              }
+              else
+              {
+                DisableIncomingAlarm = 1;  // one next incoming alarm will be disabled.
+                IndicatorScrollOn;
+                switch (FlashConfig.Language)
+                {
+                  case (CZECH):
+                    sprintf(String, "Nadchazejici budik je docasne vypnut.");
+                    String[5] = (UINT8)129; // a-acute
+                    String[9] = (UINT8)131; // i-acute
+                    String[11] = (UINT8)131; // i-acute
+                    String[16] = (UINT8)131; // i-acute
+                    String[24] = (UINT8)136; // c-caron
+                    String[28] = (UINT8)130; // e-caron
+                  break;
+
+                  case (ENGLISH):
+                  default:
+                    sprintf(String, "Incoming alarm is temporarily disabled.");
+                  break;
+                }
               }
               scroll_string(24, String);
             }
@@ -17589,8 +17604,9 @@ bool timer_callback_s(struct repeating_timer *TimerSec)
       /* Check if alarm should be disabled */
       if (DisableIncomingAlarm)
       {
-        /* Alarm has to be disabled, so do nothing, only reset the flag so other alarms will work */
+        /* Alarm has to be disabled, so do nothing, only reset the flag so other alarms will work. */
         DisableIncomingAlarm = 0;
+        IndicatorScrollOff;
       }
       else
       {
