@@ -299,7 +299,7 @@
 #define PICO_W  ///
 
 /* Flag to handle automatically the daylight saving time. List of countries are given in the User Guide. */
-#define DST_COUNTRY DST_NORTH_AMERICA
+#define DST_COUNTRY DST_EUROPE
 
 /* Release or Developer Version: Make selective choices or options. */
 #define RELEASE_VERSION  ///
