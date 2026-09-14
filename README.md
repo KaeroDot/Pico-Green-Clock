@@ -1,15 +1,37 @@
+# NOTE: This fork is mostly custom modification of wonderful [astlouys's Pico Green CLock](https://github.com/astlouys/Pico-Green-Clock)
+
+See also file quick_help_label.odt with a help for buttons usage.
+
+---
+
 ![image](https://github.com/user-attachments/assets/da7e4c82-f380-4a0c-86c0-5e40cc4aa8cd)
 
-# NOTE: For those looking for a "Network Time Protocol" (NTP) clock with many features, you may want to take a look at my "Pico-RGB-Matrix" repository...
+# NOTE: For those looking for a "Network Time Protocol" (NTP) clock with many features, you may want to take a look at my "Pico-RGB-Matrix" repository
 
 # Pico Green Clock
+
 Firmware Version 9.03 released 09-SEP-2023
 
 NOTE: Source code still shows 9.02. You may check near line 1257... If Spanish month names are there, it means you have Version 9.03.
       Also, be aware that posted ".uf2" versions are still 9.02 (without Spanish support). You'll have to rebuild executables to get Spanish language support for now.
 
-NEW WITH FIRMWARE 9.02 and 9.03:
+NEW WITH CUSTOM FIRMWARE 9.03K
 =======================
+
+- Custom branch
+- Add support for the character 'ñ' in the matrix font and add Spanish language support.
+- Update the project to build cleanly with Pico SDK 2.3.1 and restore the required SDK import bootstrap.
+- Fix Czech summer-time wording and related localized strings.
+- Disable the blinking double-dot behavior.
+- Improve the temperature readout description text.
+- Add the ability to suppress one upcoming alarm by a long press on the Down button.
+- Show the alarm-suppression state with the scroll indicator and allow it to be switched back off.
+- Set DST defaults to Europe.
+- Remove the calendar-event payload also for the developer build.
+
+NEW WITH FIRMWARE 9.02 and 9.03
+=======================
+
 - Fix the problem with Wi-Fi connection (CYW43 initialization) with new Pico's SDK library.
 - Add Spanish language support. Thanks to George A. Theall ("gatheall" on GitHub) for the translation work !
 - Add basic German language support. Thanks to Frank Seidel for the translation !
@@ -21,9 +43,9 @@ NEW WITH FIRMWARE 9.02 and 9.03:
 NOTE: I went through a system crash before the release of version 9.02 and lost a few weeks of work. Also, I had less time for testing / quality control
       before Firmare Version 9.02 release. Please kindly let me know if you find "undocumented features" in the code (read: "bugs").
 
-
-Firmware Hilights:
+Firmware Hilights
 ==================
+
 - User Guide updated to cover current Firmware Version.
 - Support for Network Time Protocol ("NTP"). When using a PicoW, the Green Clock will re-synchronize itself from a time reference server over Internet.
 - Add a function to "set-and-save" Wi-Fi credentials to PicoW's flash memory for NTP Wi-Fi access.
@@ -49,14 +71,13 @@ Firmware Hilights:
 - Add a "System Idle-Time Monitor" to get an idea of current system load (remote control required).
 - Sound queue allows for different sounds to play "jingles" if user installed a passive buzzer.
 - Sound queue allows for easy support of different sound duration and different "trains of sounds" if using the integrated active buzzer.
-- Add a sound queue for active buzzer (integrated in Green Clock) and also for an optional passive buzzer to optimize its support. 
+- Add a sound queue for active buzzer (integrated in Green Clock) and also for an optional passive buzzer to optimize its support.
 - On and Off time (run-time parameters) added for Hourly Chime to make the clock silent during the night.
 - Double dots blinking in sequence on the display to know "how deep we are" in the current minute.
 - Add more levels of brightness (for display LEDs) with an hysteresis.
 - Implement 5 X 7 character set with variable width to allow scrolling of text on clock display (date scrolling uses it for day-of-week and month).
 - "Calendar Events" may be configured at compile time. They will scroll on clock display every 30 minutes (for a 24-hour period) during the target date.
 - Sequential test of LED matrix (and optional devices if added by user) during power-up sequence.
-
 
 - Support for those languages:
 - Czech - Thanks to KaeroDot for the excellent work on this feature !
@@ -66,12 +87,10 @@ Firmware Hilights:
 - Spanish - Thanks to George A. Theall for his translation work !
 - NOTE: When a translation is not available for the target language, the English text / message will be used instead.
 
-
 - DHT22 device support code (DHT22 is an option that must be installed by user).
 - BME280 device support code (BME280 is an option that must be installed by user).
 - VS1838b infrared sensor support code (VS1838b is an option that must be installed by user).
 - Passive buzzer support code (passive buzzer is an option that must be installed by user).
-
 
 This project provides Firmware for the "Pico Green Clock" product from Waveshare (The clock is available directly from Waveshare website, or from Amazon).
 It is based on a Raspberry Pi Pico microcontroller.
@@ -82,20 +101,25 @@ You may refer to the User Guide of the most recent Firmware Version (included in
 Please take note that I'm not a Waveshare employee. This firmware is provided "as is" to help users develop their own code.
 
 ## Building from source
+
 Note: The file "pico_sdk_import.cmake" is not included in the repository. I suggest that you make a symbolic link in your project directory:
 "ln  -s  /home/pi/pico/pico-sdk/external/pico_sdk_import.cmake"  (assuming that you used the recommended directory names)
 This way, as soon as you update your SDK, rebuilding your project will automatically use the latest version.
 
-1. Follow the instructions for setting up the Pico build environment from https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf
+1. Follow the instructions for setting up the Pico build environment from <https://datasheets.raspberrypi.com/pico/getting-started-with-pico.pdf>
 2. In the pico c root directory you want to install the Pico-Green-Clock source from github by running the following commands.
+
 ```
-$ git clone git@github.com:astlouys/Pico-Green-Clock.git
+git clone git@github.com:astlouys/Pico-Green-Clock.git
 ```
+
 3. Verify that the diretories are the following:
+
 ```
 $ ls
 Pico-Green-Clock        pico-examples           pico-sdk
 ```
+
 4. Now lets build
 
 ```

@@ -4,7 +4,7 @@
    astlouys@gmail.com
    Revision 01-JUN-2023
    Compiler: arm-none-eabi-gcc 7.3.1
-   Version 9.02
+   Version 9.03K
 
    Raspberry Pi Pico firmware to drive the Waveshare Pico-Green-Clock.
    From an original software version 1.00 by Waveshare
@@ -216,6 +216,17 @@
                      - Fix dates encoded in CalendarEventsGeneric.cpp (example Calendar Events).
                      - Add Czech language support. Thanks to KaeroDot for the excellent work and translation on this feature !
 
+   14-SEP-2026  9.03K - Custom branch
+                     - Add support for the character 'ñ' in the matrix font and add Spanish language support.
+                     - Update the project to build cleanly with Pico SDK 2.3.1 and restore the required SDK import bootstrap.
+                     - Fix Czech summer-time wording and related localized strings.
+                     - Disable the blinking double-dot behavior.
+                     - Improve the temperature readout description text.
+                     - Add the ability to suppress one upcoming alarm by a long press on the Down button.
+                     - Show the alarm-suppression state with the scroll indicator and allow it to be switched back off.
+                     - Set DST defaults to Europe.
+                     - Remove the calendar-event payload also for the developer build.
+
 \* ================================================================== */
 
 /* ================================================================== *\
@@ -285,7 +296,7 @@
                      "CalendarEventsGeneric.cpp".
 \* ================================================================== */
 /* Firmware version. */
-#define FIRMWARE_VERSION "9.02"  ///
+#define FIRMWARE_VERSION "9.03K"  ///
 
 /* Select the language for data display. */
 #define DEFAULT_LANGUAGE ENGLISH // choices for now are FRENCH, ENGLISH, GERMAN, and SPANISH.
